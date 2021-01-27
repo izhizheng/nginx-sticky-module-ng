@@ -1,4 +1,7 @@
 
+1.2.7 - 2021-01-27 
+  - add samesite support
+
 1.2.5 - 2014-07-07 
   - setting path-defaults to / 
     fixing issue 

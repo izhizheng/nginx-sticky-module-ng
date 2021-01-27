@@ -48,7 +48,7 @@ Modify your compile of Nginx by adding the following directive
     }
 
 	  sticky [name=route] [domain=.foo.bar] [path=/] [expires=1h] 
-           [hash=index|md5|sha1] [no_fallback] [secure] [httponly];
+           [hash=index|md5|sha1] [no_fallback] [secure] [httponly] [samesite=Lax|Strict|None];
   
   
 - name:    the name of the cookies used to track the persistant upstream srv; 
@@ -90,6 +90,9 @@ Modify your compile of Nginx by adding the following directive
 
 - secure    enable secure cookies; transferred only via https
 - httponly  enable cookies not to be leaked via js
+
+- samesite: allows you to declare if your cookie should be restricted to a first-party or same-site context. see 
+  https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
 
 
 # Detail Mechanism

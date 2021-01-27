@@ -35,7 +35,7 @@ static ngx_int_t cookie_expires(char *str, size_t size, time_t t)
 }
 
 
-ngx_int_t ngx_http_sticky_misc_set_cookie(ngx_http_request_t *r, ngx_str_t *name, ngx_str_t *value, ngx_str_t *domain, ngx_str_t *path, time_t expires, unsigned secure, unsigned httponly)
+ngx_int_t ngx_http_sticky_misc_set_cookie(ngx_http_request_t *r, ngx_str_t *name, ngx_str_t *value, ngx_str_t *domain, ngx_str_t *path, time_t expires, unsigned secure, unsigned httponly, ngx_str_t *samesite)
 {
   u_char  *cookie, *p;
   size_t  len;
@@ -79,6 +79,11 @@ ngx_int_t ngx_http_sticky_misc_set_cookie(ngx_http_request_t *r, ngx_str_t *name
   if (httponly) {
     len += sizeof("; HttpOnly") - 1;
   }
+     
+  /* ; SameSite */
+  if (samesite->len > 0) {
+    len += sizeof("; SameSite=") - 1 + samesite->len;
+  }
 
   cookie = ngx_pnalloc(r->pool, len);
   if (cookie == NULL) {
@@ -110,6 +115,11 @@ ngx_int_t ngx_http_sticky_misc_set_cookie(ngx_http_request_t *r, ngx_str_t *name
 
   if (httponly) {
     p = ngx_copy(p, "; HttpOnly", sizeof("; HttpOnly") - 1);
+  }
+  
+  if (samesite->len > 0) {
+    p = ngx_copy(p, "; SameSite=", sizeof("; SameSite=") - 1);
+    p = ngx_copy(p, samesite->data, samesite->len);
   }
 
   part = &r->headers_out.headers.part;
